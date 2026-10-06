@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyond Fate | One Kural. One Challenge.</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="no-scroll">
+
+    <!-- Navbar (Header) -->
+    <nav id="navbar">
+        <div class="nav-brand" data-i18n="nav_brand">BEYOND FATE</div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <button class="btn small-btn" style="padding: 5px 10px; font-size: 0.8rem; cursor: pointer;" onclick="toggleLanguage()" data-i18n="toggle_lang">English</button>
+            <button class="mobile-menu-btn">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="nextScene(1); return false;" data-i18n="nav_home">Home</a></li>
+            <li><a href="#" onclick="nextScene(2); return false;" data-i18n="nav_journey">Journey</a></li>
+            <li><a href="#" onclick="nextScene(6); return false;" data-i18n="nav_wisdom">Wisdom</a></li>
+            <li><a href="#" onclick="nextScene(8); return false;" data-i18n="nav_modern">Modern Life</a></li>
+            <li><a href="#" onclick="nextScene(9); return false;" data-i18n="nav_reflection">Reflection</a></li>
+        </ul>
+    </nav>
+
+    <!-- Progress Indicator -->
+    <div id="journey-progress" class="hidden">
+        <div class="progress-step active" id="prog-1">
+            <span class="step-icon">🌱</span>
+            <span class="step-label" data-i18n="prog_seed">Seed</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="prog-2">
+            <span class="step-icon">🪨</span>
+            <span class="step-label" data-i18n="prog_obstacle">Obstacle</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="prog-3">
+            <span class="step-icon">🌿</span>
+            <span class="step-label" data-i18n="prog_sapling">Sapling</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="prog-4">
+            <span class="step-icon">🪴</span>
+            <span class="step-label" data-i18n="prog_plant">Plant</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="prog-5">
+            <span class="step-icon">🌳</span>
+            <span class="step-label" data-i18n="prog_tree">Tree</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="prog-6">
+            <span class="step-icon">📜</span>
+            <span class="step-label" data-i18n="prog_kural">Kural</span>
+        </div>
+    </div>
+
+    <!-- Game Arena (Foreground focal point for tree and wall) -->
+    <div id="game-arena" class="game-arena hidden">
+        <div class="arena-floor"></div>
+        
+        <!-- Persistent Tree Visual Container -->
+        <div id="tree-canvas" class="tree-canvas">
+            <div id="css-tree" class="stage-seed">
+                <div class="seed-dot"></div>
+                <div class="tree-trunk"></div>
+                <div class="tree-leaves">
+                    <div class="leaf leaf-1"></div>
+                    <div class="leaf leaf-2"></div>
+                    <div class="leaf leaf-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wall Visual Container -->
+        <div id="wall-canvas" class="wall-canvas">
+            <div class="wall-row"><div class="brick b-top"></div><div class="brick b-top c1"></div><div class="brick b-top c2"></div><div class="brick b-top"></div></div>
+            <div class="wall-row offset"><div class="brick b-mid"></div><div class="brick b-mid c3"></div><div class="brick b-mid"></div></div>
+            <div class="wall-row"><div class="brick b-mid"></div><div class="brick b-mid c4"></div><div class="brick b-mid c5"></div><div class="brick b-mid"></div></div>
+            <div class="wall-row offset"><div class="brick b-bot"></div><div class="brick b-bot c6"></div><div class="brick b-bot"></div></div>
+            <div class="wall-row"><div class="brick b-bot"></div><div class="brick b-bot"></div><div class="brick b-bot"></div><div class="brick b-bot"></div></div>
+            
+            <!-- Dedicated crack overlay element -->
+            <div class="crack-overlay"></div>
+        </div>
+    </div>
+    
+    <!-- Game HUD -->
+    <div id="game-hud" class="game-hud hidden">
+        <p class="hud-text"><span data-i18n="hud_attempts">ATTEMPTS: </span><span id="hud-attempts">0</span></p>
+        <p class="hud-text"><span data-i18n="hud_failures">FAILURES: </span><span id="hud-failures">0</span></p>
+        <p class="hud-text mt-1" data-i18n="hud_progress">PROGRESS</p>
+        <div class="hud-bar">
+            <div id="hud-progress" class="hud-fill"></div>
+        </div>
+    </div>
+
+    <main id="scene-container">
+        
+        <!-- SCENE 1: THE SEED -->
+        <section id="scene-1" class="scene active flex-center">
+            <div class="content text-center">
+                <h1 class="title" data-i18n="s1_title">BEYOND FATE</h1>
+                <p class="tagline mt-1" data-i18n="s1_tagline">One Kural. One Challenge. Keep Going.</p>
+                <h2 class="subtitle mt-4" data-i18n="s1_subtitle">WHAT IF FAILURE IS NOT THE END?</h2>
+                <button class="btn primary-btn mt-4" onclick="nextScene(2)" data-i18n="s1_btn">BEGIN THE JOURNEY</button>
+            </div>
+        </section>
+
+        <!-- SCENE 2: GAME INTRO -->
+        <section id="scene-2" class="scene flex-center">
+            <div class="content text-center">
+                <h2 class="text-gold" data-i18n="s2_title">BREAK THE WALL</h2>
+                <p class="text-large mt-2" data-i18n="s2_desc1">Every goal has an obstacle.</p>
+                <p class="text-large mt-1 italic" data-i18n="s2_desc2">How many times will you try before you stop?</p>
+                <button class="btn primary-btn mt-4" onclick="breakWallGame.startGame()" data-i18n="s2_btn">START GAME</button>
+            </div>
+        </section>
+
+        <!-- SCENE 3: STAGE 1 -->
+        <section id="scene-3" class="scene flex-center">
+            <div class="content text-center">
+                <div id="s3-challenge">
+                    <h2 class="text-dark" data-i18n="s3_title">THE FIRST ATTEMPT</h2>
+                    <p class="text-large mt-2" data-i18n="s3_desc">The path you chose didn't work.<br>What will you do?</p>
+                    <div class="options-container mt-4">
+                        <button class="quiz-btn" onclick="breakWallGame.handleFail('s3')" data-i18n="s3_opt1">A. Give up</button>
+                        <button class="quiz-btn" onclick="breakWallGame.handleSuccess('s3', 4)" data-i18n="s3_opt2">B. Try another way</button>
+                        <button class="quiz-btn" onclick="breakWallGame.handleFail('s3')" data-i18n="s3_opt3">C. Wait for the obstacle to disappear</button>
+                    </div>
+                </div>
+
+                <div id="s3-feedback" class="feedback-container hidden">
+                    <div class="icon-large text-red">❌</div>
+                    <h3 class="mt-2 text-dark" data-i18n="s3_fail_title">YOU STOPPED.</h3>
+                    <p class="mt-2 italic text-large text-main" data-i18n="s3_fail_desc">The obstacle is still there.</p>
+                    <button class="btn secondary-btn mt-4" onclick="breakWallGame.retry('s3')" data-i18n="s3_retry">TRY AGAIN</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 4: STAGE 2 (PUZZLE) -->
+        <section id="scene-4" class="scene flex-center">
+            <div class="content text-center">
+                <div id="s4-challenge">
+                    <h2 class="text-dark" data-i18n="s4_title">THE WALL GETS HARDER</h2>
+                    <p class="text-large mt-2" data-i18n="s4_desc">What comes next?</p>
+                    <p class="text-large mt-1 bold-text">2 → 4 → 8 → 16 → ?</p>
+                    <div class="options-container mt-4">
+                        <button class="quiz-btn" onclick="breakWallGame.handleFail('s4')">18</button>
+                        <button class="quiz-btn" onclick="breakWallGame.handleFail('s4')">24</button>
+                        <button class="quiz-btn" onclick="breakWallGame.handleSuccess('s4', 5)">32</button>
+                    </div>
+                </div>
+
+                <div id="s4-feedback" class="feedback-container hidden">
+                    <div class="icon-large text-red">❌</div>
+                    <h3 class="mt-2 text-dark" data-i18n="s4_fail_title">NOT THIS WAY.</h3>
+                    <p class="mt-2 italic text-large text-main" data-i18n="s4_fail_desc">Failure is information.<br>Try again.</p>
+                    <button class="btn secondary-btn mt-4" onclick="breakWallGame.retry('s4')" data-i18n="s4_retry">TRY AGAIN</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 5: FINAL CHALLENGE -->
+        <section id="scene-5" class="scene flex-center">
+            <div class="content text-center">
+                <div id="s5-challenge">
+                    <h2 class="text-gold" data-i18n="s5_title">THE FINAL OBSTACLE</h2>
+                    <p class="text-large mt-2" data-i18n="s5_desc1">You have failed twice.</p>
+                    <p class="text-large mt-1 italic" data-i18n="s5_desc2">You are closer than when you started.<br>What will you do?</p>
+                    <div class="options-container mt-4">
+                        <button class="quiz-btn" onclick="breakWallGame.handleFail('s5')" data-i18n="s5_opt1">STOP HERE</button>
+                        <button class="quiz-btn" onclick="breakWallGame.handleFinalSuccess()" data-i18n="s5_opt2">TRY ONE MORE TIME</button>
+                    </div>
+                </div>
+
+                <div id="s5-feedback" class="feedback-container hidden">
+                    <div class="icon-large text-red">❌</div>
+                    <h3 class="mt-2 text-dark" data-i18n="s5_fail_title">THE WALL REMAINS.</h3>
+                    <p class="mt-2 italic text-large text-main" data-i18n="s5_fail_desc">BUT THE JOURNEY DOESN'T HAVE TO END HERE.</p>
+                    <button class="btn secondary-btn mt-4" onclick="breakWallGame.retry('s5')" data-i18n="s5_retry">TRY ONE MORE TIME</button>
+                </div>
+
+                <div id="s5-success" class="success-state hidden">
+                    <h2 class="text-dark" data-i18n="s5_succ_title">ONE MORE TRY.</h2>
+                    <p class="mt-2 text-large fade-in-delay-1 italic" data-i18n="s5_succ_desc1">YOU DIDN'T BREAK THE WALL BY NEVER FAILING.</p>
+                    <p class="mt-1 text-large text-gold fade-in-delay-2 bold-text" data-i18n="s5_succ_desc2">You broke it by refusing to stop.</p>
+                    <button class="btn primary-btn mt-4 fade-in-delay-3" onclick="nextScene(6)" data-i18n="s5_btn">KEEP GOING</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 6: KURAL REVEAL -->
+        <section id="scene-6" class="scene flex-center">
+            <div class="content text-center">
+                <h2 data-i18n="s6_title">YOU JUST EXPERIENCED A<br>2000-YEAR-OLD IDEA.</h2>
+                <div class="manuscript-card mt-4">
+                    <h3 class="tamil-title text-brown" data-i18n="prog_kural">திருக்குறள்</h3>
+                    <div class="kural-text mt-4" id="kural-text-container">
+                        <!-- Words injected by JS -->
+                    </div>
+                    <p class="kural-number mt-4 text-brown">குறள் 620</p>
+                    <p class="kural-english mt-4 text-dark italic hidden" id="kural-english-meaning">"Those who work tirelessly without giving up can overcome even difficulties that seem unavoidable."</p>
+                </div>
+                <button class="btn primary-btn mt-4 reveal-btn hidden" id="to-meaning-btn" onclick="nextScene(7)" data-i18n="s6_btn">WHAT DOES IT MEAN?</button>
+            </div>
+        </section>
+
+        <!-- SCENE 7: MEANING -->
+        <section id="scene-7" class="scene flex-center">
+            <div class="content text-center">
+                <h2 class="text-gold" data-i18n="s7_title">WHAT DOES IT MEAN?</h2>
+                <p class="meaning-text text-large mt-4 italic" data-i18n="s7_meaning">"Those who continue their efforts without losing heart can overcome even difficulties that seem unavoidable."</p>
+                
+                <div class="modern-grid mt-4">
+                    <div class="stage-card">
+                        <h4 class="text-dark" data-i18n="s7_card1">PERSISTENCE</h4>
+                    </div>
+                    <div class="stage-card">
+                        <h4 class="text-dark" data-i18n="s7_card2">EFFORT</h4>
+                    </div>
+                    <div class="stage-card">
+                        <h4 class="text-dark" data-i18n="s7_card3">COURAGE</h4>
+                    </div>
+                    <div class="stage-card border-gold">
+                        <h4 class="text-gold" data-i18n="s7_card4">CONTINUOUS ACTION</h4>
+                    </div>
+                </div>
+                
+                <button class="btn primary-btn mt-4" onclick="nextScene(8)" data-i18n="s7_btn">CONTINUE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 8: MODERN LIFE (FLIP CARDS) -->
+        <section id="scene-8" class="scene flex-center">
+            <div class="content text-center" style="max-width: 900px;">
+                <h2 data-i18n="s8_title">ANCIENT WISDOM, MODERN LIFE</h2>
+                <p class="mt-2 text-large italic" data-i18n="s8_desc">How does this apply today?</p>
+                
+                <div class="modern-grid mt-4">
+                    <!-- Card 1 -->
+                    <div class="modern-card">
+                        <div class="card-front">
+                            <div class="icon-large">💼</div>
+                            <h3 class="text-brown mt-2" data-i18n="s8_c1_title">Career Setbacks</h3>
+                            <button class="btn small-btn mt-2 expand-btn" data-i18n="s8_explore">Explore</button>
+                        </div>
+                        <div class="card-back hidden">
+                            <p data-i18n="s8_c1_desc">Not getting the job or promotion isn't the end. It's a redirect. Keep refining your skills.</p>
+                            <button class="btn small-btn mt-2 collapse-btn" data-i18n="s8_back">Back</button>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="modern-card">
+                        <div class="card-front">
+                            <div class="icon-large">🎨</div>
+                            <h3 class="text-brown mt-2" data-i18n="s8_c2_title">Creative Blocks</h3>
+                            <button class="btn small-btn mt-2 expand-btn" data-i18n="s8_explore">Explore</button>
+                        </div>
+                        <div class="card-back hidden">
+                            <p data-i18n="s8_c2_desc">Every failed draft is a step towards the masterpiece. Keep creating.</p>
+                            <button class="btn small-btn mt-2 collapse-btn" data-i18n="s8_back">Back</button>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="modern-card">
+                        <div class="card-front">
+                            <div class="icon-large">🌱</div>
+                            <h3 class="text-brown mt-2" data-i18n="s8_c3_title">Personal Growth</h3>
+                            <button class="btn small-btn mt-2 expand-btn" data-i18n="s8_explore">Explore</button>
+                        </div>
+                        <div class="card-back hidden">
+                            <p data-i18n="s8_c3_desc">Breaking old habits takes time. Stumbling is part of learning to walk.</p>
+                            <button class="btn small-btn mt-2 collapse-btn" data-i18n="s8_back">Back</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn primary-btn mt-4" onclick="nextScene(9)" data-i18n="s8_btn">TEST YOUR REFLECTION</button>
+            </div>
+        </section>
+
+        <!-- SCENE 9: REFLECTION QUIZ -->
+        <section id="scene-9" class="scene flex-center">
+            <div class="content text-center">
+                <div id="quiz-container">
+                    <h2 data-i18n="s9_title">REFLECTION QUIZ</h2>
+                    <p class="mt-2 text-large" data-i18n="s9_desc">How persistent are you?</p>
+                    
+                    <div class="quiz-question active mt-4" id="q1">
+                        <p class="bold-text" data-i18n="s9_q1">1. A project you worked hard on just failed.</p>
+                        <div class="options-container mt-2">
+                            <button class="quiz-answer-btn" data-score="0" data-i18n="s9_q1_a1">Blame circumstances and move on.</button>
+                            <button class="quiz-answer-btn" data-score="1" data-i18n="s9_q1_a2">Analyze what went wrong and rebuild.</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question hidden mt-4" id="q2">
+                        <p class="bold-text" data-i18n="s9_q2">2. You are learning a new skill, but it feels too difficult.</p>
+                        <div class="options-container mt-2">
+                            <button class="quiz-answer-btn" data-score="0" data-i18n="s9_q2_a1">Decide it's not for you.</button>
+                            <button class="quiz-answer-btn" data-score="1" data-i18n="s9_q2_a2">Practice for 10 more minutes today.</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question hidden mt-4" id="q3">
+                        <p class="bold-text" data-i18n="s9_q3">3. Someone criticizes your sincere effort.</p>
+                        <div class="options-container mt-2">
+                            <button class="quiz-answer-btn" data-score="0" data-i18n="s9_q3_a1">Let it discourage you.</button>
+                            <button class="quiz-answer-btn" data-score="1" data-i18n="s9_q3_a2">Filter the useful feedback and ignore the rest.</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="quiz-result" class="hidden">
+                    <h2 class="text-gold" data-i18n="s9_res_title">YOUR REFLECTION</h2>
+                    <p id="quiz-summary" class="mt-2 text-large"></p>
+                    <p id="quiz-message" class="mt-2 italic"></p>
+                    
+                    <div class="meter-container mt-4">
+                        <p class="meter-label" data-i18n="s9_meter">PERSISTENCE METER</p>
+                        <div class="meter-bar">
+                            <div class="meter-fill" id="meter-fill"></div>
+                        </div>
+                        <p class="meter-percent" id="meter-percent">0%</p>
+                    </div>
+                    
+                    <button class="btn primary-btn mt-4" onclick="nextScene(10)" data-i18n="s9_btn">FINISH JOURNEY</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 10: THE MORAL -->
+        <section id="scene-10" class="scene flex-center">
+            <div class="content text-center">
+                <div class="final-sequence" id="final-sequence">
+                    <p class="seq-text text-large" data-i18n="s10_t1">OBSTACLES MAY TEST YOU.</p>
+                    <p class="seq-text text-large mt-1" data-i18n="s10_t2">EFFORT MOVES YOU FORWARD.</p>
+                    <p class="seq-text text-large mt-1" data-i18n="s10_t3">PERSISTENCE CHANGES THE JOURNEY.</p>
+                    <h2 class="seq-text final-words mt-4 text-gold" data-i18n="s10_t4">KEEP GOING.</h2>
+                </div>
+                
+                <div class="final-footer mt-4" id="final-footer" style="opacity: 0;">
+                    <p class="text-large text-dark" data-i18n="s10_f1">You didn't just reach the goal.</p>
+                    <p class="text-large text-gold bold-text mt-1" data-i18n="s10_f2">You grew towards it.</p>
+                    <button class="btn primary-btn mt-4" onclick="restartJourney()" data-i18n="s10_btn">EXPERIENCE AGAIN</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="lang.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
